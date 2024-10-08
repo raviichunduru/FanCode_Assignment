@@ -33,7 +33,7 @@ Key tools to be used in this project are:
 - [x] **Slf4J/Log4J** (for logging interface and as a logging library)
 - [x] **Typesafe** (for application configuration for multiple test environments)
 - [x] **GitHub** (for version control)
-- [x] **Badges** (for a quick view on your project meta and build status)
+- [x] **Badges** (for a quick view on project meta and build status)
       
 ## How to setup and run test?
 1. Install Java JDK 11 or above
