@@ -54,4 +54,4 @@ Key tools to be used in this project are:
 1. Install Java JDK 11 or above
 2. Clone repository: https://github.com/raviichunduru/FanCode_Assignment
 3. That is it, You can run single test written for purpose of above-mentioned problem statement
-   > mvn test -Dtest=FanCode_Assignment#assertThat_AllUsersFromFanCodeCity_Completed_FiftyPercentTasks
+   > mvn clean test
