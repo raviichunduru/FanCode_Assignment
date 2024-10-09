@@ -6,11 +6,11 @@ import com.typesafe.config.Config;
 import config.TestConfig;
 import io.restassured.response.Response;
 import lombok.SneakyThrows;
-import org.assertj.core.api.Assertions;
 import pojo.User;
 import pojo.UserTasks;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -25,12 +25,15 @@ public class FanCodeAPI {
   private List<UserTasks> allTasks;
   private Map<Long, List<UserTasks>> tasksOf_FanCodeCity_Users;
 
-  private static FanCodeAPI fanCodeAPI = new FanCodeAPI();
+  private static FanCodeAPI fanCodeAPI = null;
 
   private FanCodeAPI () {
   }
 
-  public static FanCodeAPI getInstance() {
+  public static synchronized FanCodeAPI getInstance() {
+    if (Objects.isNull(fanCodeAPI)) {
+      fanCodeAPI = new FanCodeAPI();
+    }
     return fanCodeAPI;
   }
 
@@ -95,7 +98,7 @@ public class FanCodeAPI {
     return fanCodeAPI;
   }
 
-  public void assertThat_AllUsersFrom_FanCodeCity_Completed_FiftyPercentTasks () {
+  public void assertCompletionPercentageForUsers() {
 
     System.out.println("User ID | Total Tasks | Completed Tasks | Completion Percentage");
     System.out.println("---------------------------------------------------------------");
@@ -109,6 +112,7 @@ public class FanCodeAPI {
       assertThat(completionPercentage)
                 .as("Completion percentage for User ID " + userId)
                 .isGreaterThan(50.0);
+
       System.out.printf("%7d | %11d | %14d | %.2f%%%n", userId, totalTasks, completedTasks, completionPercentage);
     });
   }
