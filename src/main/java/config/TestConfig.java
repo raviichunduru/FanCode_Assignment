@@ -2,12 +2,10 @@ package config;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
-import lombok.extern.slf4j.Slf4j;
-import org.slf4j.MDC;
-
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.Objects;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Env configuration once loaded, is to remain constant for all classes using it. Thus we will
@@ -38,7 +36,6 @@ public class TestConfig {
   }
 
   private Config setConfig() {
-    log.info("Call setConfig only once for the whole test run!");
 
     // Standard config load behavior (loads common config from application.conf file)
     // https://github.com/lightbend/config#standard-behavior
@@ -58,7 +55,6 @@ public class TestConfig {
       for (File file :
           Objects.requireNonNull(
               Paths.get("src/main/resources/" + resourceBasePath).toFile().listFiles())) {
-        log.info("file path: {}", file);
 
         Config childConfig =
             ConfigFactory.load(String.format("%s/%s", resourceBasePath, file.getName()));
