@@ -9,10 +9,10 @@ public class FanCode_Assignment {
   void assertThat_AllUsersFrom_FanCodeCity_Completed_FiftyPercentTasks() {
 
     FanCodeAPI.getInstance()
-              .getAllUsers()
-              .filterUsers_Of_FanCodeCity()
-              .getTasksOfAllUsers()
-              .filterTasksOf_UsersFrom_FanCodeCity()
-              .assertCompletionPercentageForUsers();
+        .getAllUsers()
+        .filterUsers_Of_FanCodeCity()
+        .getTasksOfAllUsers()
+        .filterTasksOf_UsersFrom_FanCodeCity()
+        .assertCompletionPercentageForUsers();
   }
 }
