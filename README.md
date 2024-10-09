@@ -28,7 +28,8 @@ Key tools to be used in this project are:
 
 - [x] **Java** (As the core programming language)
 - [x] **Maven** (for automatic dependency management)
-- [x] **Junit 5** (for assertions)
+- [x] **Junit 5** (for running tests)
+- [x] **AssertJ** (for Fluent Assertions)
 - [x] **RestAssured**  (library for Rest API automation)
 - [x] **Slf4J/Log4J** (for logging interface and as a logging library)
 - [x] **Typesafe** (for application configuration for multiple test environments)
@@ -38,5 +39,5 @@ Key tools to be used in this project are:
 ## How to setup and run test?
 1. Install Java JDK 11 or above
 2. Clone repository: https://github.com/raviichunduru/FanCode_Assignment
-3. That is it, You can run single test written for purpose of above mentioned problem statement
+3. That is it, You can run single test written for purpose of above-mentioned problem statement
    > mvn test -Dtest=FanCode_Assignment#assertThat_AllUsersFromFanCodeCity_Completed_FiftyPercentTasks
