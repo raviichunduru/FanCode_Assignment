@@ -6,7 +6,7 @@ import com.typesafe.config.Config;
 import config.TestConfig;
 import io.restassured.response.Response;
 import lombok.SneakyThrows;
-import org.junit.jupiter.api.Assertions;
+import org.assertj.core.api.Assertions;
 import pojo.User;
 import pojo.UserTasks;
 import java.util.List;
