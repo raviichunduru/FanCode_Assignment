@@ -1,7 +1,7 @@
 package fancode;
 
+import static assertions.UserTaskAssertions.assertCompletionPercentage;
 import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -114,9 +114,7 @@ public class FanCodeAPI {
           long completedTaskCount = tasks.stream().filter(UserTask::isCompleted).count();
           double completionPercentage = (completedTaskCount * 100.0) / totalTaskCount;
 
-          assertThat(completionPercentage)
-              .as("Completion percentage for User ID " + userId)
-              .isGreaterThan(50.0);
+          assertCompletionPercentage(userId, totalTaskCount, completedTaskCount);
 
           System.out.printf(
               "%7d | %11d | %14d | %.2f%%%n",
