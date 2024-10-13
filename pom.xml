@@ -106,7 +106,7 @@
                 <version>${maven-surefire-plugin}</version>
                 <configuration>
                     <includes>
-                        <include>FanCode_Assignment.java</include>
+                        <include>ValidatingFanCodeCityUserTasks.java</include>
                     </includes>
                 </configuration>
             </plugin>

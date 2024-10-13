@@ -3,9 +3,9 @@ package pojo;
 import lombok.Data;
 
 @Data
-public class UserTasks {
+public class UserTask {
   private long userId;
   private long id;
   private String title;
-  private boolean completed;
+  private boolean isCompleted;
 }

@@ -52,6 +52,6 @@ Key tools to be used in this project are:
 
 ## How to setup and run test?
 1. Install Java JDK 11 or above
-2. Clone repository: https://github.com/raviichunduru/FanCode_Assignment
+2. Clone repository: https://github.com/raviichunduru/ValidatingFanCodeCityUserTasks
 3. That is it, You can run single test written for purpose of above-mentioned problem statement
    > mvn clean test

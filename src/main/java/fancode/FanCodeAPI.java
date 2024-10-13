@@ -1,19 +1,20 @@
 package fancode;
 
+import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.typesafe.config.Config;
 import config.TestConfig;
 import io.restassured.response.Response;
-import lombok.SneakyThrows;
-import pojo.User;
-import pojo.UserTasks;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.assertThat;
+import lombok.SneakyThrows;
+import pojo.User;
+import pojo.UserTask;
 
 public class FanCodeAPI {
 
@@ -22,13 +23,12 @@ public class FanCodeAPI {
   private final ObjectMapper objectMapper = new ObjectMapper();
   private List<User> allUsers;
   private List<User> fanCodeUsers;
-  private List<UserTasks> allTasks;
-  private Map<Long, List<UserTasks>> tasksOf_FanCodeCity_Users;
+  private List<UserTask> allTasks;
+  private Map<Long, List<UserTask>> fanCodeCityUserTasks;
 
   private static FanCodeAPI fanCodeAPI = null;
 
-  private FanCodeAPI () {
-  }
+  private FanCodeAPI() {}
 
   public static synchronized FanCodeAPI getInstance() {
     if (Objects.isNull(fanCodeAPI)) {
@@ -39,16 +39,16 @@ public class FanCodeAPI {
 
   private Response getUsers() {
     return given()
-              .baseUri(CONFIG.getString("BASE_URL"))
-              .log()
-              .ifValidationFails()
-              .when()
-              .get(CONFIG.getString("USERS_ENDPOINT"))
-              .then()
-              .log()
-              .ifError()
-              .extract()
-              .response();
+        .baseUri(CONFIG.getString("BASE_URL"))
+        .log()
+        .ifValidationFails()
+        .when()
+        .get(CONFIG.getString("USERS_ENDPOINT"))
+        .then()
+        .log()
+        .ifError()
+        .extract()
+        .response();
   }
 
   @SneakyThrows
@@ -58,43 +58,48 @@ public class FanCodeAPI {
     return fanCodeAPI;
   }
 
-  public FanCodeAPI filterUsers_Of_FanCodeCity() {
-    fanCodeUsers =  allUsers.stream()
-      .filter(user -> {
-        double latitude = Double.parseDouble(user.getAddress().getGeo().getLat());
-        double longitude = Double.parseDouble(user.getAddress().getGeo().getLng());
-        return (latitude >= -40 && latitude <= 5) && (longitude >= 5 && longitude <= 100);
-      })
-      .collect(Collectors.toList());
+  public FanCodeAPI filterUsersOfFanCodeCity() {
+    fanCodeUsers =
+        allUsers.stream()
+            .filter(
+                user -> {
+                  double latitude = Double.parseDouble(user.getAddress().getGeo().getLatitude());
+                  double longitude = Double.parseDouble(user.getAddress().getGeo().getLongitude());
+                  return (latitude >= -40 && latitude <= 5) && (longitude >= 5 && longitude <= 100);
+                })
+            .collect(Collectors.toList());
     return fanCodeAPI;
   }
 
   private Response getTasks() {
     return given()
-      .baseUri(CONFIG.getString("BASE_URL"))
-      .log()
-      .ifValidationFails()
-      .when()
-      .get(CONFIG.getString("TODO_ENDPOINT"))
-      .then()
-      .log()
-      .ifError()
-      .extract()
-      .response();
+        .baseUri(CONFIG.getString("BASE_URL"))
+        .log()
+        .ifValidationFails()
+        .when()
+        .get(CONFIG.getString("TODO_ENDPOINT"))
+        .then()
+        .log()
+        .ifError()
+        .extract()
+        .response();
   }
 
   @SneakyThrows
   public FanCodeAPI getTasksOfAllUsers() {
     Response tasksResponse = getTasks();
-    allTasks = objectMapper.readValue(tasksResponse.asString(), new TypeReference<List<UserTasks>>() {});
+    allTasks =
+        objectMapper.readValue(tasksResponse.asString(), new TypeReference<List<UserTask>>() {});
     return fanCodeAPI;
   }
 
   @SneakyThrows
-  public FanCodeAPI filterTasksOf_UsersFrom_FanCodeCity() {
-    tasksOf_FanCodeCity_Users = allTasks.stream()
-      .filter(task -> fanCodeUsers.stream().anyMatch(user -> user.getId() == task.getUserId()))
-      .collect(Collectors.groupingBy(UserTasks::getUserId));
+  public FanCodeAPI filterTasksOfUsersFromFanCodeCity() {
+    fanCodeCityUserTasks =
+        allTasks.stream()
+            .filter(
+                task -> fanCodeUsers.stream().anyMatch(user -> user.getId() == task.getUserId()))
+            .collect(Collectors.groupingBy(UserTask::getUserId));
     return fanCodeAPI;
   }
 
@@ -103,17 +108,19 @@ public class FanCodeAPI {
     System.out.println("User ID | Total Tasks | Completed Tasks | Completion Percentage");
     System.out.println("---------------------------------------------------------------");
 
-    tasksOf_FanCodeCity_Users.forEach((userId, tasks) -> {
+    fanCodeCityUserTasks.forEach(
+        (userId, tasks) -> {
+          long totalTaskCount = tasks.size();
+          long completedTaskCount = tasks.stream().filter(UserTask::isCompleted).count();
+          double completionPercentage = (completedTaskCount * 100.0) / totalTaskCount;
 
-      long totalTasks = tasks.size();
-      long completedTasks = tasks.stream().filter(UserTasks::isCompleted).count();
-      double completionPercentage = (completedTasks * 100.0) / totalTasks;
+          assertThat(completionPercentage)
+              .as("Completion percentage for User ID " + userId)
+              .isGreaterThan(50.0);
 
-      assertThat(completionPercentage)
-                .as("Completion percentage for User ID " + userId)
-                .isGreaterThan(50.0);
-
-      System.out.printf("%7d | %11d | %14d | %.2f%%%n", userId, totalTasks, completedTasks, completionPercentage);
-    });
+          System.out.printf(
+              "%7d | %11d | %14d | %.2f%%%n",
+              userId, totalTaskCount, completedTaskCount, completionPercentage);
+        });
   }
 }

@@ -2,17 +2,17 @@ import fancode.FanCodeAPI;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 
-public class FanCode_Assignment {
+public class ValidatingFanCodeCityUserTasks {
 
   @SneakyThrows
   @Test
-  void assertThat_AllUsersFrom_FanCodeCity_Completed_FiftyPercentTasks() {
+  void assertThatAllUsersFromFanCodeCityCompletedFiftyPercentTasks() {
 
     FanCodeAPI.getInstance()
         .getAllUsers()
-        .filterUsers_Of_FanCodeCity()
+        .filterUsersOfFanCodeCity()
         .getTasksOfAllUsers()
-        .filterTasksOf_UsersFrom_FanCodeCity()
+        .filterTasksOfUsersFromFanCodeCity()
         .assertCompletionPercentageForUsers();
   }
 }
